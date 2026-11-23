@@ -3,6 +3,7 @@ name: pages
 on:
   push:
     branches: ["main"]
+  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -11,20 +12,51 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: pages-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check the demo site
+        run: |
+          node --check demo/exchange.js
+          python - << 'PY'
+          from pathlib import Path
+          root = Path("demo")
+          required = [
+              "index.html",
+              "exchange.js",
+              "styles.css",
+              "favicon.svg",
+              ".nojekyll",
+              "screenshots/wallet.png",
+              "screenshots/transaction.png",
+              "screenshots/chain.png",
+          ]
+          missing = [name for name in required if not (root / name).is_file()]
+          if missing:
+              raise SystemExit("missing demo files: " + ", ".join(missing))
+          html = (root / "index.html").read_text(encoding="utf-8")
+          for ref in ("exchange.js", "styles.css", "screenshots/wallet.png", "screenshots/chain.png"):
+              if ref not in html:
+                  raise SystemExit(f"{ref} is not referenced by demo/index.html")
+          print("demo site files ok")
+          PY
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: demo
+
   deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: demo
       - id: deployment
         uses: actions/deploy-pages@v4
