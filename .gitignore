@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+.env
+.coverage
+htmlcov/
+*.egg-info/
+virtual_mouse/model/*.dat
+virtual_mouse/model/*.bz2
+virtual_mouse/model/*.partial

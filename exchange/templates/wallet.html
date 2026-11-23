@@ -1,89 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Wallet</title>
-
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.4.0.js" integrity="sha256-DYZMCC8HTC+QDr5QNaIcfR7VSPtcISykd+6eSmBW5qo="
-            crossorigin="anonymous"></script>
-
-    <style>
-        body {
-          margin: 0;
-          font-family: Arial, Helvetica, sans-serif;
-        }
-         table, th, td {
-          border: 1px solid black;
-        }
-        .topnav {
-          overflow: hidden;
-          background-color: black;
-          text-align: center;
-        }
-         .topnav a {
-          float: left;
-          color: #f2f2f2;
-          text-align: left;
-          padding: 14px 16px;
-          text-decoration: none;
-          font-size: 17px;
-        }
-         .topnav a:hover {
-          background-color: #ddd;
-          color: black;
-        }
-         .topnav a.active {
-          background-color: red;
-          color: white;
-        }
-    </style>
-</head>
-<body>
-
-<!-- Navigation -->
-<div class="topnav">
-  <a href="/">Wallet</a>
-  <a href="/transaction/view">View Transactions</a>
-  <a href="/transaction/new">Create Transaction</a>
-</div>
-
-<!-- Wallet -->
-<div class="row">
-    <label class="col-sm-2">Public Key:</label>
-      <div class="col-sm-10">
-        <textarea id="public_key" rows="5" class="form-control" readonly></textarea>
-      </div>
-    </div>
-
-    <br>
-
-    <div class="row">
-      <label class="col-sm-2">Private Key:</label>
-      <div class="col-sm-10">
-        <textarea id="private_key" rows="5" class="form-control" readonly></textarea>
-      </div>
-    </div>
-
-<input type="button" value="Generate Wallet">
-
-<script>
-  $(function(){
-    $('input').click(function(){
-      $.ajax({
-        url: '/api/wallet/create',
-        type: 'GET',
-        success: function(response){
-          document.getElementById("private_key").innerHTML = response['private_key'];
-          document.getElementById("public_key").innerHTML = response['public_key'];
-        },
-        error: function(error){
-          console.log(error);
-        }
-      });
-    });
-  })
-</script>
-
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}Wallet · Blockchain Exchange{% endblock %}
+{% block content %}
+  <h1>Wallet</h1>
+  <p class="lede">Generate a key pair for this demo. The public key is the address. The private key signs transfers. Neither key is stored on the server. This browser tab remembers the last pair so the transaction form can fill it in.</p>
+  <p><button type="button" id="generate">Generate wallet</button></p>
+  <p id="wallet-status" class="status" role="status"></p>
+  <div class="field">
+    <label for="public_key">Public key (address)</label>
+    <textarea id="public_key" readonly spellcheck="false"></textarea>
+  </div>
+  <p><button type="button" id="copy-public" class="secondary" disabled>Copy public key</button></p>
+  <div class="field">
+    <label for="private_key">Private key</label>
+    <textarea id="private_key" readonly spellcheck="false"></textarea>
+  </div>
+  <p><button type="button" id="copy-private" class="secondary" disabled>Copy private key</button></p>
+{% endblock %}

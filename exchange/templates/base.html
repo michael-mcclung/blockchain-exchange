@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Blockchain Exchange{% endblock %}</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body data-page="{{ page }}">
+  <a class="skip" href="#content">Skip to content</a>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <div>
+        <p class="brand"><a href="{{ url_for('pages.wallet') }}">Blockchain Exchange</a></p>
+        <p class="tagline">Texas Tech Software Engineering I</p>
+      </div>
+      <nav aria-label="Primary">
+        <a href="{{ url_for('pages.wallet') }}" {% if page == 'wallet' %}aria-current="page"{% endif %}>Wallet</a>
+        <a href="{{ url_for('pages.new_transaction') }}" {% if page == 'new' %}aria-current="page"{% endif %}>New transaction</a>
+        <a href="{{ url_for('pages.view_transaction') }}" {% if page == 'chain' %}aria-current="page"{% endif %}>Chain</a>
+      </nav>
+    </div>
+  </header>
+  <main id="content" class="wrap">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>Classroom demo. This process keeps the chain in memory and does not store keys. A private key is sent only to this process, to sign the transfer you submit. Not for real funds.</p>
+      <p>Michael McClung, Zarka McClung, and Maktm.</p>
+    </div>
+  </footer>
+  <script src="{{ url_for('static', filename='exchange.js') }}"></script>
+</body>
+</html>

@@ -1,108 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>View Transaction</title>
-
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.4.0.js" integrity="sha256-DYZMCC8HTC+QDr5QNaIcfR7VSPtcISykd+6eSmBW5qo="
-            crossorigin="anonymous"></script>
-
-    <style>
-        body {
-          margin: 0;
-          font-family: Arial, Helvetica, sans-serif;
-        }
-         table, th, td {
-          border: 1px solid black;
-        }
-        .topnav {
-          overflow: hidden;
-          background-color: black;
-          text-align: center;
-        }
-         .topnav a {
-          float: left;
-          color: #f2f2f2;
-          text-align: left;
-          padding: 14px 16px;
-          text-decoration: none;
-          font-size: 17px;
-        }
-         .topnav a:hover {
-          background-color: #ddd;
-          color: black;
-        }
-         .topnav a.active {
-          background-color: red;
-          color: white;
-        }
-    </style>
-</head>
-<body>
-
-<!-- Navigation -->
-<div class="topnav">
-  <a href="/">Wallet</a>
-  <a href="/transaction/view">View Transactions</a>
-  <a href="/transaction/new">Create Transaction</a>
-</div>
-
-<table id="transactions_table" class="table-responsive">
-    <thead>
-    <tr>
-        <th scope="col">#</th>
-        <th scope="col">Recipient</th>
-        <th scope="col">Sender</th>
-        <th scope="col">Stock</th>
-        <th scope="col">Quantity</th>
-    </tr>
-    </thead>
-    <tbody>
-
-    </tbody>
-</table>
-
-<script>
-$(function() {
-    $.ajax({
-        url: '/api/transaction/view',
-        type: 'GET',
-        success: function(response) {
-            console.log(response);
-
-            var transactions = [];
-            count = 1;
-
-            for (i = 1; i < response.length; i++) {
-                transaction = [
-                    i,
-                    response["chain"][i]["transactions"][0]["recipient_address"],
-                    response["chain"][i]["transactions"][0]["sender_address"],
-                    response["chain"][i]["transactions"][0]["stock"],
-                    response["chain"][i]["transactions"][0]["quantity"],
-                    'Timessss',
-                    response["chain"][i]["block_number"]];
-
-                transactions.push(transaction);
-
-                table_contents = '<tr><th scope="row">' + i + "</th><td>" + response["chain"][i]["transactions"][0]["recipient_address"]
-                    + '</td><td>' + response["chain"][i]["transactions"][0]["sender_address"] + '</td><td>' + response["chain"][i]["transactions"][0]["stock"]
-                    + '</td><td>' + response["chain"][i]["transactions"][0]["quantity"] + '</td></tr>';
-
-                $('#transactions_table').append(table_contents);
-            }
-        },
-        error: function(error) {
-            console.log('Error: ' + error);
-        }
-    });
-});
-</script>
-
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}Chain · Blockchain Exchange{% endblock %}
+{% block content %}
+  <h1>Chain</h1>
+  <p class="lede">Mining searches for a nonce so the block hash starts with the difficulty prefix. The search is small on purpose. It is a classroom proof of work, not a production miner.</p>
+  <p id="chain-meta" class="meta"></p>
+  <section class="card" aria-labelledby="pending-heading">
+    <h2 id="pending-heading">Pending</h2>
+    <div id="pending"></div>
+    <p><button type="button" id="mine" disabled>Mine block</button></p>
+  </section>
+  <p id="chain-status" class="status" role="status"></p>
+  <section aria-labelledby="blocks-heading">
+    <h2 id="blocks-heading">Blocks</h2>
+    <div id="blocks"></div>
+  </section>
+{% endblock %}
