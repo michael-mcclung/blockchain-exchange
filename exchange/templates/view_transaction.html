@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Chain · Blockchain Exchange{% endblock %}
+{% block content %}
+  <h1>Chain</h1>
+  <p class="lede">Mining searches for a nonce so the block hash starts with the difficulty prefix. The search is small on purpose. It is a classroom proof of work, not a production miner.</p>
+  <p id="chain-meta" class="meta"></p>
+  <section class="card" aria-labelledby="pending-heading">
+    <h2 id="pending-heading">Pending</h2>
+    <div id="pending"></div>
+    <p><button type="button" id="mine" disabled>Mine block</button></p>
+  </section>
+  <p id="chain-status" class="status" role="status"></p>
+  <section aria-labelledby="blocks-heading">
+    <h2 id="blocks-heading">Blocks</h2>
+    <div id="blocks"></div>
+  </section>
+{% endblock %}

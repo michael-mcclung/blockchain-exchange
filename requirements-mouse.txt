@@ -1,0 +1,8 @@
+# Desktop-only. The exchange and the tests do not need these.
+# dlib may need CMake and a C++ compiler when a wheel is not published
+# for your platform.
+numpy>=1.26
+opencv-python>=4.9
+imutils>=0.5.4
+pyautogui>=0.9.54
+dlib>=19.24

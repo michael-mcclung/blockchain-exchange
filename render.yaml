@@ -1,0 +1,16 @@
+# Optional. The live demo is the GitHub Pages site in demo/, which does not
+# need Render. Use this only if you want the Flask process itself on Render's
+# free web service. The chain is in memory, so it clears whenever the service
+# sleeps or restarts. One worker, because each worker would have its own chain.
+services:
+  - type: web
+    name: blockchain-exchange
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT --workers 1 exchange:create_app()
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.3"
+      - key: EXCHANGE_HOST
+        value: 0.0.0.0

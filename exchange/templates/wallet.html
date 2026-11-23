@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Wallet · Blockchain Exchange{% endblock %}
+{% block content %}
+  <h1>Wallet</h1>
+  <p class="lede">Generate a key pair for this demo. The public key is the address. The private key signs transfers. Neither key is stored on the server. This browser tab remembers the last pair so the transaction form can fill it in.</p>
+  <p><button type="button" id="generate">Generate wallet</button></p>
+  <p id="wallet-status" class="status" role="status"></p>
+  <div class="field">
+    <label for="public_key">Public key (address)</label>
+    <textarea id="public_key" readonly spellcheck="false"></textarea>
+  </div>
+  <p><button type="button" id="copy-public" class="secondary" disabled>Copy public key</button></p>
+  <div class="field">
+    <label for="private_key">Private key</label>
+    <textarea id="private_key" readonly spellcheck="false"></textarea>
+  </div>
+  <p><button type="button" id="copy-private" class="secondary" disabled>Copy private key</button></p>
+{% endblock %}

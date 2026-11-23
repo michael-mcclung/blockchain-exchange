@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}New transaction · Blockchain Exchange{% endblock %}
+{% block content %}
+  <h1>New transaction</h1>
+  <p class="lede">Queue a stock transfer. It stays pending until you mine a block on the Chain page. The server checks that the private key matches the sender address, then signs the transfer with RSA-PSS and SHA-256.</p>
+  <p><button type="button" id="fill-wallet" class="secondary">Fill sender from this browser</button></p>
+  <form id="transaction-form">
+    <div class="field">
+      <label for="sender_address">Sender address</label>
+      <textarea id="sender_address" name="sender_address" spellcheck="false" required></textarea>
+    </div>
+    <div class="field">
+      <label for="sender_private_key">Sender private key</label>
+      <textarea id="sender_private_key" name="sender_private_key" spellcheck="false" required></textarea>
+    </div>
+    <div class="field">
+      <label for="recipient_address">Recipient address</label>
+      <textarea id="recipient_address" name="recipient_address" spellcheck="false" required></textarea>
+    </div>
+    <div class="split">
+      <div class="field">
+        <label for="stock">Stock</label>
+        <input id="stock" name="stock" type="text" maxlength="16" autocomplete="off" required>
+      </div>
+      <div class="field">
+        <label for="quantity">Quantity</label>
+        <input id="quantity" name="quantity" type="number" min="1" step="1" required>
+      </div>
+    </div>
+    <p><button type="submit" id="submit-transaction">Submit transaction</button></p>
+  </form>
+  <p id="tx-status" class="status" role="status"></p>
+{% endblock %}

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blockchain Exchange demo</title>
+  <meta name="description" content="In-browser demo of a Texas Tech Software Engineering I blockchain exchange. Wallet, transactions, and mining run locally in this page.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#content">Skip to content</a>
+  <div class="banner">
+    <div class="wrap">In-browser demo. Keys and the chain stay in this browser. The virtual mouse is desktop-only — see About.</div>
+  </div>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <div>
+        <p class="brand"><a href="#wallet">Blockchain Exchange</a></p>
+        <p class="tagline">Texas Tech Software Engineering I</p>
+      </div>
+      <nav aria-label="Primary">
+        <a href="#wallet" data-panel="wallet">Wallet</a>
+        <a href="#transaction" data-panel="transaction">New transaction</a>
+        <a href="#chain" data-panel="chain">Chain</a>
+        <a href="#about" data-panel="about">About</a>
+      </nav>
+    </div>
+  </header>
+  <main id="content" class="wrap">
+    <noscript><p>This demo needs JavaScript to generate keys and mine blocks.</p></noscript>
+
+    <section id="panel-wallet" class="panel active" data-panel="wallet">
+      <h1>Wallet</h1>
+      <p class="lede">Generate a key pair in this browser with Web Crypto (RSA-PSS, SHA-256, 2048 bits). The public key is the address. The private key never leaves this page. This tab remembers the last pair until you close it.</p>
+      <p><button type="button" id="generate">Generate wallet</button></p>
+      <p id="wallet-status" class="status" role="status"></p>
+      <div class="field">
+        <label for="public_key">Public key (address)</label>
+        <textarea id="public_key" readonly spellcheck="false"></textarea>
+      </div>
+      <p><button type="button" id="copy-public" class="secondary" disabled>Copy public key</button></p>
+      <div class="field">
+        <label for="private_key">Private key</label>
+        <textarea id="private_key" readonly spellcheck="false"></textarea>
+      </div>
+      <p><button type="button" id="copy-private" class="secondary" disabled>Copy private key</button></p>
+    </section>
+
+    <section id="panel-transaction" class="panel" data-panel="transaction" hidden>
+      <h1>New transaction</h1>
+      <p class="lede">Queue a stock transfer. The page signs it here, checks the signature, and holds it until you mine a block. Nothing is sent to a server.</p>
+      <p><button type="button" id="fill-wallet" class="secondary">Fill sender from this browser</button></p>
+      <form id="transaction-form">
+        <div class="field">
+          <label for="sender_address">Sender address</label>
+          <textarea id="sender_address" name="sender_address" spellcheck="false" required></textarea>
+        </div>
+        <div class="field">
+          <label for="sender_private_key">Sender private key</label>
+          <textarea id="sender_private_key" name="sender_private_key" spellcheck="false" required></textarea>
+        </div>
+        <div class="field">
+          <label for="recipient_address">Recipient address</label>
+          <textarea id="recipient_address" name="recipient_address" spellcheck="false" required></textarea>
+        </div>
+        <div class="split">
+          <div class="field">
+            <label for="stock">Stock</label>
+            <input id="stock" name="stock" type="text" maxlength="16" autocomplete="off" required>
+          </div>
+          <div class="field">
+            <label for="quantity">Quantity</label>
+            <input id="quantity" name="quantity" type="number" min="1" step="1" required>
+          </div>
+        </div>
+        <p><button type="submit" id="submit-transaction">Submit transaction</button></p>
+      </form>
+      <p id="tx-status" class="status" role="status"></p>
+    </section>
+
+    <section id="panel-chain" class="panel" data-panel="chain" hidden>
+      <h1>Chain</h1>
+      <p class="lede">Mining searches for a nonce so the block’s SHA-256 hash starts with <span class="mono">00</span>. That is a classroom proof of work. The chain is saved in this browser’s localStorage.</p>
+      <p id="chain-meta" class="meta"></p>
+      <section class="card" aria-labelledby="pending-heading">
+        <h2 id="pending-heading">Pending</h2>
+        <div id="pending"></div>
+        <p><button type="button" id="mine" disabled>Mine block</button></p>
+      </section>
+      <p id="chain-status" class="status" role="status"></p>
+      <section aria-labelledby="blocks-heading">
+        <h2 id="blocks-heading">Blocks</h2>
+        <div id="blocks"></div>
+      </section>
+      <p><button type="button" id="reset-chain" class="secondary">Reset demo chain</button></p>
+    </section>
+
+    <section id="panel-about" class="panel" data-panel="about" hidden>
+      <h1>About this demo</h1>
+      <p class="lede">This page is a browser version of the blockchain exchange from a Texas Tech Software Engineering I team project (about 2019–2020). It is not the Flask process. Signing uses the Web Crypto API. The chain stays in this browser. It does not connect to a market, and it is not for real funds.</p>
+      <p>The Python app you can run locally lives in the same repository and implements the same steps: create a wallet, submit a transfer, mine a block, and read the chain. The two chains are separate.</p>
+      <h2>Virtual mouse</h2>
+      <p>The other half of the original project is a desktop program. It is not in this page because it needs a webcam and it moves the real mouse pointer.</p>
+      <ul class="about-list">
+        <li>It finds a face with dlib’s 68-point landmark model and reads the webcam.</li>
+        <li>Holding the mouth open toggles pointer control. The nose is compared with an anchor point to move the cursor.</li>
+        <li>Holding one eye closed clicks the left or right button. The camera image is mirrored, and the program swaps the eye landmarks so the wink matches that mirrored view.</li>
+        <li>Holding both eyes closed toggles scroll mode. Esc quits.</li>
+        <li>If the model file or the webcam is missing, the program exits and explains what to do. The model is downloaded from the dlib project and is not stored in the git repository.</li>
+      </ul>
+      <p>Screenshots below are the Flask app running locally.</p>
+      <div class="shots">
+        <figure>
+          <img src="screenshots/wallet.png" alt="Wallet page after generating a demonstration key pair">
+          <figcaption>Wallet page.</figcaption>
+        </figure>
+        <figure>
+          <img src="screenshots/transaction.png" alt="New transaction form">
+          <figcaption>New transaction.</figcaption>
+        </figure>
+        <figure>
+          <img src="screenshots/chain.png" alt="Chain page with a mined block listing a stock transfer">
+          <figcaption>Chain page after mining.</figcaption>
+        </figure>
+      </div>
+      <h2>Credits</h2>
+      <ul class="about-list">
+        <li>Michael McClung — project and the original Tkinter launcher.</li>
+        <li>Zarka McClung — virtual mouse (<code>face-control.py</code>, <code>utils.py</code>).</li>
+        <li>Maktm (Michael Kiros) — 2019 Flask exchange, included with Michael McClung’s approval.</li>
+      </ul>
+      <p>
+        <a href="https://github.com/michael-mcclung/blockchain-exchange">This repository</a><br>
+        <a href="https://github.com/michael-mcclung/Blockchain-Virtual-Mouse">Original launcher and virtual mouse</a><br>
+        <a href="https://github.com/Maktm/blockchain-exchange">Original exchange</a><br>
+        <a href="https://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2">dlib landmark model</a>
+      </p>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>Classroom demo. Not for real funds. Michael McClung, Zarka McClung, and Maktm.</p>
+    </div>
+  </footer>
+  <script src="exchange.js"></script>
+</body>
+</html>
